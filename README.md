@@ -1,6 +1,6 @@
 ﻿# guoan-wechat-writer
 
-微信公众号"九万里""国家安全部"文风写作与谋题报送工作流（Agent Skill）。当前版本：**v1.1.0**（语义化版本，见 SKILL.md 头部 `metadata.version`，发布记录见仓库 Tags 与文末"近期更新"）。
+微信公众号"九万里""国家安全部"文风写作与谋题报送工作流（Agent Skill）。当前版本：**v1.1.1**（语义化版本，见 SKILL.md 头部 `metadata.version`，发布记录见仓库 Tags 与文末"近期更新"）。
 
 ## 功能一览
 
