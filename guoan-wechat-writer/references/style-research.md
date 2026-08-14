@@ -1,6 +1,6 @@
 ﻿# 研究性文章风格指南（研究体·内参笔法）
 
-> 依据：3 篇获特别好评的成品样本（《集装箱反垄断研究》《全球战略石油储备研究》《算力金属博弈研究》，即 D:\WordPDFPPT\新建文件夹\ 中的 1集装箱.docx、1石油.docx、1算力金属.docx）+ 8 篇同类样本（无稀土磁铁/智能汽车/机器人/租赁算力/数据安全/赤潮/人工智能拟人化互动等）+ 用户保存的写作与核验提示词（1提示词.docx，仅作参考，权重低于好评样本）。文本提取副本：<你的工作目录>\style-analysis\research-samples\。
+> 依据：3 篇获特别好评的成品样本（《集装箱反垄断研究》《全球战略石油储备研究》《算力金属博弈研究》，本机样本原档 D:\WordPDFPPT\新建文件夹\ 中的 1集装箱.docx、1石油.docx、1算力金属.docx，**可选，不随技能分发**）+ 8 篇同类样本（无稀土磁铁/智能汽车/机器人/租赁算力/数据安全/赤潮/人工智能拟人化互动等）+ 用户保存的写作与核验提示词（1提示词.docx，仅作参考，权重低于好评样本）。文本提取副本（本机可选）：<你的工作目录>\style-analysis\research-samples\。
 > 版本说明：本指南为研究体（研究性文章）专属规范。**研究体是独立研究报告文体，不是微信公众号文章**：语言基因与九万里/国安部同源（借用公众号文风的句法词汇），但体裁模板层完全独立——交付物为与示例同格式的 Word 文档（.docx，公文排版）+ 事实核查表；无公众号元信息行、无署名、无推送模板、**不配图**（对比见第八节）。
 
 ## 一、文类定位与触发
@@ -116,9 +116,9 @@
 - 无文章大标题、无元信息行、无署名、无图——正文直接从总论定调段开始
 - 备选变体（1石油）：宋体小四正文、标题宋体加粗（大标题 13.5pt、节标题 12pt）
 
-生成工具链（已固化在 <你的工作目录>\tools\research-docx\）：
+生成工具链（随技能分发，位于 <技能目录>\tools\research-docx\；依赖 pandoc）：
 1. 起草正文为 Markdown：`# 一、XX`=一级节标题；`## （一）XX`=独立二级标题（少用）；"（一）……"段内编号直接写进段首；正文自然段。
-2. `pwsh tools\research-docx\md2docx.ps1 -Input 文章.md -Output 文章.docx`（默认公文式；`-Variant songti` 宋体小四式）
+2. `pwsh <技能目录>\tools\research-docx\md2docx.ps1 -Input 文章.md -Output 文章.docx`（默认公文式；`-Variant songti` 宋体小四式；未安装 pandoc 时脚本会给出安装提示）
 3. 校验（硬门槛）：解压 docx 抽查样式表（Normal=仿宋三号+首行缩进2字符、Heading1=黑体三号）与页面 sectPr（A4 及上述页边距）；全文无 Markdown 残留（**、#、[图片]）、无元信息行、无署名。
-模板：tools\research-docx\reference.docx（公文式）、reference-songti.docx（宋体小四式）；重建模板用 make-reference.ps1。
+模板：<技能目录>\tools\research-docx\reference.docx（公文式）、reference-songti.docx（宋体小四式）；重建模板用 make-reference.ps1（纯 .NET，无需 pandoc）。
 保存：docx 与 md 底稿存 <你的工作目录>\outputs\YYYY-MM-DD-标题\。
