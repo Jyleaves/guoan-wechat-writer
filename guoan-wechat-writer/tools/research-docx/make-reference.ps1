@@ -16,21 +16,30 @@ $st = [System.IO.File]::ReadAllText($stPath, [System.Text.Encoding]::UTF8)
 function ReplaceBlock($sid, $newBlock) {
   $pattern = '(?s)<w:style [^>]*w:styleId="' + $sid + '"[^>]*>.*?</w:style>'
   $m = [regex]::Match($script:st, $pattern)
-  if (-not $m.Success) { throw "style $sid not found" }
+  if (-not $m.Success) {
+    $anchor = '</w:styles>'
+    if (-not $script:st.Contains($anchor)) { throw 'styles end anchor not found' }
+    $script:st = $script:st.Replace($anchor, $newBlock + "`r`n" + $anchor)
+    Write-Host "inserted style: $sid"
+    return
+  }
   $script:st = $script:st.Substring(0, $m.Index) + $newBlock + $script:st.Substring($m.Index + $m.Length)
   Write-Host "patched style: $sid"
 }
 
 if ($Variant -eq 'gongwen') {
-  # 公文式（1集装箱实测）：正文仿宋三号、一级标题黑体三号、二级标题楷体三号、首行缩进2字符
-  $bodyFont = '仿宋'; $bodySz = '32'
+  # 公文式（集装箱+算力金属实测，按用户要求用 GB2312 字体族）：正文仿宋_GB2312 三号、
+  # 一级标题黑体三号、观点句与二级标题楷体_GB2312 三号、西文 Times New Roman、首行缩进2字符
+  $bodyFont = '仿宋_GB2312'; $bodySz = '32'
   $h1Font = '黑体'; $h1Sz = '32'; $h1Bold = '<w:b w:val="0" />'
-  $h2Font = '楷体'; $h2Sz = '32'; $h2Bold = '<w:b w:val="0" />'
+  $h2Font = '楷体_GB2312'; $h2Sz = '32'; $h2Bold = '<w:b w:val="0" />'
+  $leadFont = '楷体_GB2312'; $leadSz = '32'
 } else {
-  # 宋体小四式（1石油实测）：正文宋体小四、标题宋体加粗
+  # 宋体小四式（1石油实测）：正文宋体小四、标题宋体加粗；观点句楷体_GB2312 小四
   $bodyFont = '宋体'; $bodySz = '24'
   $h1Font = '宋体'; $h1Sz = '27'; $h1Bold = '<w:b />'
   $h2Font = '宋体'; $h2Sz = '24'; $h2Bold = '<w:b />'
+  $leadFont = '楷体_GB2312'; $leadSz = '24'
 }
 
 $normal = @"
@@ -155,6 +164,19 @@ $h2Char = @"
   </w:style>
 "@
 
+$leadSentence = @"
+<w:style w:type="character" w:customStyle="1" w:styleId="LeadSentence">
+    <w:name w:val="LeadSentence" />
+    <w:basedOn w:val="DefaultParagraphFont" />
+    <w:rPr>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:eastAsia="$leadFont" w:cs="Times New Roman" />
+      <w:color w:val="000000" />
+      <w:sz w:val="$leadSz" />
+      <w:szCs w:val="$leadSz" />
+    </w:rPr>
+  </w:style>
+"@
+
 ReplaceBlock 'Normal' $normal
 ReplaceBlock 'BodyText' $bodyText
 ReplaceBlock 'Compact' $compact
@@ -162,6 +184,7 @@ ReplaceBlock 'Heading1' $h1
 ReplaceBlock 'Heading2' $h2
 ReplaceBlock 'Heading1Char' $h1Char
 ReplaceBlock 'Heading2Char' $h2Char
+ReplaceBlock 'LeadSentence' $leadSentence
 
 [System.IO.File]::WriteAllText($stPath, $st, (New-Object System.Text.UTF8Encoding($false)))
 
