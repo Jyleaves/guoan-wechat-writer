@@ -28,18 +28,24 @@ function ReplaceBlock($sid, $newBlock) {
 }
 
 if ($Variant -eq 'gongwen') {
-  # 公文式（集装箱+算力金属实测，按用户要求用 GB2312 字体族）：正文仿宋_GB2312 三号、
-  # 一级标题黑体三号、观点句与二级标题楷体_GB2312 三号、西文 Times New Roman、首行缩进2字符
-  $bodyFont = '仿宋_GB2312'; $bodySz = '32'
+  # 公文式（集装箱+算力金属实测）：正文仿宋三号、一级标题黑体三号、观点句与二级标题楷体三号、
+  # 西文 Times New Roman、首行缩进2字符。字体策略（用户口径）：楷体固定用"楷体"；
+  # 仿宋自动检测——装有仿宋_GB2312 则用、未装退回"仿宋"
+  $fontList = (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts').PSObject.Properties
+  $hasFsGb = $false
+  foreach ($fp in $fontList) { if ($fp.Name -like '*仿宋_GB2312*') { $hasFsGb = $true } }
+  $bodyFont = if ($hasFsGb) { '仿宋_GB2312' } else { '仿宋' }; $bodySz = '32'
   $h1Font = '黑体'; $h1Sz = '32'; $h1Bold = '<w:b w:val="0" />'
-  $h2Font = '楷体_GB2312'; $h2Sz = '32'; $h2Bold = '<w:b w:val="0" />'
-  $leadFont = '楷体_GB2312'; $leadSz = '32'
+  $h2Font = '楷体'; $h2Sz = '32'; $h2Bold = '<w:b w:val="0" />'
+  $leadFont = '楷体'; $leadSz = '32'
+  Write-Host ("gongwen fonts: body=" + $bodyFont + " lead=" + $leadFont)
 } else {
-  # 宋体小四式（1石油实测）：正文宋体小四、标题宋体加粗；观点句楷体_GB2312 小四
+  # 宋体小四式（1石油实测）：正文宋体小四、标题宋体加粗；观点句楷体
   $bodyFont = '宋体'; $bodySz = '24'
   $h1Font = '宋体'; $h1Sz = '27'; $h1Bold = '<w:b />'
   $h2Font = '宋体'; $h2Sz = '24'; $h2Bold = '<w:b />'
-  $leadFont = '楷体_GB2312'; $leadSz = '24'
+  $leadFont = '楷体'; $leadSz = '24'
+  Write-Host ("songti fonts: lead=" + $leadFont)
 }
 
 $normal = @"
