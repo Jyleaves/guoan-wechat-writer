@@ -1,6 +1,6 @@
 # guoan-wechat-writer
 
-> 微信公众号"九万里""国家安全部"文风写作与谋题报送工作流 + 研究性文章（研究体）报告写作（Agent Skill；发布包另含可选 DSH Agent 预设）。当前版本：**v1.1.8**（语义化版本，发布记录见 CHANGELOG.md 与文末"近期更新"）。
+> 微信公众号"九万里""国家安全部"文风写作与谋题报送工作流 + 研究性文章（研究体）报告写作（Agent Skill；发布包另含可选 DSH Agent 预设）。当前版本：**v1.1.9**（语义化版本，发布记录见 CHANGELOG.md 与文末"近期更新"）。
 
 ## 功能一览
 
@@ -72,9 +72,10 @@ pwsh -File .\install.ps1 -Workdir "你的工作目录"
 
 ## 环境依赖
 
+- **PowerShell 7（pwsh）**：研究体 Word 生成（md2docx.ps1）与发布包安装/更新脚本必需。Windows 自带的 PowerShell 5.1 无法正确读取本技能的 UTF-8（无 BOM）脚本（中文会乱码）；运行 `pwsh -v` 确认可用。安装：`winget install --id Microsoft.PowerShell`（macOS/Linux 见 https://aka.ms/powershell ）
 - **pandoc**：研究体 Word 文档生成必需。安装：`winget install --id JohnMacFarlane.Pandoc` 或 https://pandoc.org/installing.html
 - **Python 3 + matplotlib**：仅数据图表自动生成需要（可选；未安装时自动降级为半自动配图清单）：`pip install matplotlib`
-- 其余功能零依赖；缺失依赖时工具脚本会给出安装提示
+- 谋题、公众号写作、事实核查、反馈学习等核心功能零依赖；缺失依赖时工具脚本会给出安装提示
 
 ## 使用
 
@@ -89,13 +90,27 @@ pwsh -File .\install.ps1 -Workdir "你的工作目录"
 
 ## 更新
 
-- 更新时重新下载并覆盖 `guoan-wechat-writer` 文件夹即可；**反馈记忆与历史产出独立于技能目录**（在你的工作目录下），覆盖安装不受影响
-- 版本语义：补丁=修正；次版本=新功能/新经验模式；主版本=架构变更。详见 CHANGELOG.md
+**反馈记忆与历史产出都在你的工作目录（outputs/feedback），与技能目录无关，更新覆盖不影响数据。**任选其一：
+
+- **一键更新脚本（推荐，任意安装方式可用）**——自动下载最新 Release 并重装（工作目录等配置重新写入）：
+  ```powershell
+  pwsh -c "irm https://raw.githubusercontent.com/Jyleaves/guoan-wechat-writer/main/update.ps1 | iex"
+  ```
+  免交互版：`pwsh -File update.ps1 -Workdir "你的工作目录"`（发布包内附 update.ps1）；`-Version v1.1.9` 可更新到指定版本
+- **skills CLI 安装的用户**：重新执行安装命令即可覆盖更新：`npx skills add Jyleaves/guoan-wechat-writer@guoan-wechat-writer -g -y`
+- **git clone 安装的用户**：`git pull` 后把 `guoan-wechat-writer` 文件夹重新复制到技能目录（或直接用一键更新脚本）
+- 手动下载：https://github.com/Jyleaves/guoan-wechat-writer/releases/latest
+
+版本语义：补丁=修正；次版本=新功能/新经验模式；主版本=架构变更。详见 CHANGELOG.md
 
 ## 近期更新
 
 | 版本 | 日期 | 要点 |
 |---|---|---|
+| v1.1.9 | 2026-08-16 | 一键更新（update.ps1 + latest 稳定下载地址）；环境依赖补全（PowerShell 7）；install.ps1 编码加固 |
+| v1.1.8 | 2026-08-16 | 全面移除 UTF-8 BOM（SKILL.md frontmatter 解析修复）；首发 GitHub Release |
+| v1.1.7 | 2026-08-15 | 字体口径校准（楷体固定、仿宋自动检测）+ 多样性保障 |
+| v1.1.6 | 2026-08-15 | 研究体观点句规范（30–50 字三要素判断句、五种句式轮换）+ 去样本依赖 |
 | v1.1.5 | 2026-08-14 | 研究体结构细化：总体情况节内要点式分段（一段一主体）、体例统一规则 |
 | v1.1.4 | 2026-08-14 | 修复观点句过滤器多字节 bug（docx 乱码方框） |
 | v1.1.3 | 2026-08-14 | 字体校准（仿宋_GB2312/黑体/楷体_GB2312/Times New Roman）+ 观点句楷体自动化 |
