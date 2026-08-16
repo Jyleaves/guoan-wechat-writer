@@ -1,4 +1,4 @@
-﻿param([string]$Variant = 'gongwen')
+param([string]$Variant = 'gongwen')
 $ErrorActionPreference = 'Stop'
 $base = Split-Path -Parent $MyInvocation.MyCommand.Path
 $tmp = Join-Path $base 'tmp-default'

@@ -1,4 +1,4 @@
-﻿param([string]$InFile, [string]$Output, [string]$Variant = 'gongwen')
+param([string]$InFile, [string]$Output, [string]$Variant = 'gongwen')
 $ErrorActionPreference = 'Stop'
 if (-not (Get-Command pandoc -ErrorAction SilentlyContinue)) {
   throw '未找到 pandoc：研究体 Word 生成依赖 pandoc。请先安装（winget install --id JohnMacFarlane.Pandoc，或访问 https://pandoc.org/installing.html），然后重试。'
